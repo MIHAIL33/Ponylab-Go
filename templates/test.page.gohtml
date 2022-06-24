@@ -1,0 +1,50 @@
+{{ template "base" .}}
+
+{{ define "content" }}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="mt-5">Test</h1>
+                <hr>
+            
+                <div id="container"></div>
+            </div>
+        </div>
+    </div>
+{{ end }}
+
+{{ define "js" }}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+
+        $(function () {
+            var ws;
+
+            if (window.WebSocket === undefined) {
+                $("#container").append("Your browser does not support WebSockets");
+                return;
+            } else {
+                ws = initWS();
+            }
+
+            function initWS() {
+                var socket = new WebSocket("ws://localhost:8000/ws"),
+                    container = $("#container")
+                socket.onopen = function() {
+                    container.append("<p>Socket is open</p>");
+                };
+                socket.onmessage = function (e) {
+                    container.html("<p>"  + e.data + "</p>");
+                }
+                socket.onclose = function () {
+                    container.append("<p>Socket closed</p>");
+                }
+
+                return socket;
+            }
+        });
+
+            
+
+    </script>
+{{ end }}
